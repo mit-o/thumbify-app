@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 from corsheaders.defaults import default_headers
 from datetime import timedelta
@@ -85,8 +85,12 @@ WSGI_APPLICATION = "thumbify.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ["THUMBIFY_POSTGRES_DB"],
+        "USER": os.environ["THUMBIFY_POSTGRES_USER"],
+        "PASSWORD": os.environ["THUMBIFY_POSTGRES_PASSWORD"],
+        "HOST": os.environ["THUMBIFY_POSTGRES_HOST"],
+        "PORT": os.environ["THUMBIFY_POSTGRES_PORT"],
     }
 }
 
