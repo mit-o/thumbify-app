@@ -7,12 +7,6 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    upload_avatar = serializers.ImageField(
-        use_url=True,
-        required=False,
-        write_only=True,
-    )
-
     class Meta:
         model = User
         fields = (
