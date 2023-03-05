@@ -22,12 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@=yl5(u8&(4ehzbebqn7$k#d*8(-mdbhjv#yyg0#c2rehpu139"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0"]
+ALLOWED_HOSTS.extend(filter(None, os.environ.get("ALLOWED_HOSTS", "").split(",")))
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -43,7 +45,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
-    # local apps
+    # local apps,
+    "apps.core",
     "apps.accounts",
     "apps.thumbnailer",
 ]
@@ -86,11 +89,10 @@ WSGI_APPLICATION = "thumbify.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ["THUMBIFY_POSTGRES_DB"],
-        "USER": os.environ["THUMBIFY_POSTGRES_USER"],
-        "PASSWORD": os.environ["THUMBIFY_POSTGRES_PASSWORD"],
-        "HOST": os.environ["THUMBIFY_POSTGRES_HOST"],
-        "PORT": os.environ["THUMBIFY_POSTGRES_PORT"],
+        "HOST": os.environ.get("DB_HOST"),
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASS"),
     }
 }
 
@@ -129,7 +131,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_ROOT = "/vol/web/static"
+STATIC_URL = "/static/static/"
+MEDIA_ROOT = "/vol/web/media"
+MEDIA_URL = "/static/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
