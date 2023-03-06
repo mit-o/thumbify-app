@@ -22,18 +22,24 @@ class AccountTier(models.Model):
         return self.name
 
 
+class Account(models.Model):
+    user = models.OneToOneField(
+        "accounts.User", on_delete=models.CASCADE, related_name="account"
+    )
+    tier = models.ForeignKey(
+        AccountTier, on_delete=models.SET_NULL, null=True, default=None
+    )
+
+    def __str__(self):
+        return f"{self.user.email} - {self.tier.name}"
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=64, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    tier = models.ForeignKey(
-        AccountTier,
-        on_delete=models.SET_NULL,
-        null=True,
-        default=None,
-    )
 
     USERNAME_FIELD = "email"
     objects = UserManager()

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserChangeForm, CustomUserCreationForm
 from django.contrib.auth import get_user_model
-from .models import AccountTier
+from .models import AccountTier, Account
 
 User = get_user_model()
 
@@ -16,7 +16,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ("is_staff", "is_superuser", "is_active")
     search_fields = ("email",)
     fieldsets = (
-        (None, {"fields": ("email", "password", "tier")}),
+        (None, {"fields": ("email", "password")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
     )
     add_fieldsets = (
@@ -28,7 +28,6 @@ class CustomUserAdmin(UserAdmin):
                     "email",
                     "password1",
                     "password2",
-                    "tier",
                     "is_staff",
                     "is_superuser",
                 ),
@@ -45,3 +44,8 @@ class AccountTierAdmin(admin.ModelAdmin):
         "include_original_link",
         "generate_expiring_link",
     )
+
+
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    list_display = ("user", "tier")
